@@ -10,7 +10,7 @@ The project combines SQL-based data preparation and analysis with an interactive
 
 1. How do enrollment patterns differ across institution types and sizes?
 2. How does financial aid participation vary across institution types?
-3. How do graduation outcomes differ across institution types and institutional levels?
+3. How do graduation and transfer-out rates differ across institution types and institutional levels?
 4. How do graduation rates vary across levels of Pell Grant participation?
 
 ## Tools Used
@@ -66,7 +66,7 @@ The interactive Power BI dashboard includes:
 
 ## Data Source
 
-Data was obtained from the U.S. Department of Education's Integrated Postsecondary Education Data System (IPEDS), using the 2024 institutional dataset.
+Data was obtained from the U.S. Department of Education's Integrated Postsecondary Education Data System (IPEDS). The analysis uses four files from the 2024 IPEDS collection: institutional characteristics (HD2024), fall enrollment (DRVEF2024), student financial aid (SFA2324), and graduation rates (DRVGR2024).
 
 ## Repository Contents
 
