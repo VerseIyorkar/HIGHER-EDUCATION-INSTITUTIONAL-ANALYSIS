@@ -1,0 +1,132 @@
+******* 1) FINANCIAL AID
+Question: How does financial aid participation vary across public, private nonprofit, and private for-profit institutions?
+SELECT
+    CASE
+        WHEN h.CONTROL = 1 THEN 'Public'
+        WHEN h.CONTROL = 2 THEN 'Private nonprofit'
+        WHEN h.CONTROL = 3 THEN 'Private for-profit'
+    END AS Institution_Control,
+
+    COUNT(*) AS Institution_Count,
+
+    ROUND(AVG(CAST(f.UPGRNTP AS FLOAT)), 1) AS Avg_Pell_Percent,
+    ROUND(AVG(CAST(f.UAGRNTP AS FLOAT)), 1) AS Avg_GrantAid_Percent,
+    ROUND(AVG(CAST(f.UFLOANP AS FLOAT)), 1) AS Avg_FederalLoan_Percent
+
+FROM dbo.HD2024 h
+INNER JOIN dbo.SFA2324 f
+    ON h.UNITID = f.UNITID
+
+WHERE h.CONTROL > 0
+    AND f.UPGRNTP >= 0
+    AND f.UAGRNTP >= 0
+    AND f.UFLOANP >= 0
+
+GROUP BY h.CONTROL
+ORDER BY h.CONTROL;
+
+
+__________________________________________________________________________________________________________
+
+******* 2) GRADUATION OUTCOMES
+Question: How do graduation and transfer-out rates differ across institution types and institutional levels?
+SELECT
+    CASE
+        WHEN h.CONTROL = 1 THEN 'Public'
+        WHEN h.CONTROL = 2 THEN 'Private nonprofit'
+        WHEN h.CONTROL = 3 THEN 'Private for-profit'
+    END AS Institution_Control,
+
+    COUNT(*) AS Institution_Count,
+
+    ROUND(AVG(CAST(g.GRRTTOT AS FLOAT)), 1) AS Avg_Graduation_Rate,
+    ROUND(AVG(CAST(g.TRRTTOT AS FLOAT)), 1) AS Avg_TransferOut_Rate
+
+FROM dbo.HD2024 h
+INNER JOIN dbo.DRVGR2024 g
+    ON h.UNITID = g.UNITID
+
+WHERE h.CONTROL > 0
+    AND g.GRRTTOT >= 0
+    AND g.TRRTTOT >= 0
+
+GROUP BY h.CONTROL
+ORDER BY h.CONTROL;
+
+__________________________________________________________________________________________________________
+
+******* 3) PELL PARTICIPATION AND OUTCOMES
+Question: How do graduation rates vary across institutions with different levels of Pell Grant participation?
+What patterns exist between Pell Grant participation and graduation outcomes across institutions?
+-- 2) GRADUATION OUTCOMES
+-- Question: How do graduation and transfer-out rates differ
+-- across institution types and institutional levels?
+
+SELECT
+    CASE
+        WHEN h.CONTROL = 1 THEN 'Public'
+        WHEN h.CONTROL = 2 THEN 'Private nonprofit'
+        WHEN h.CONTROL = 3 THEN 'Private for-profit'
+    END AS Institution_Control,
+
+    CASE
+        WHEN h.ICLEVEL = 1 THEN 'Four-year or above'
+        WHEN h.ICLEVEL = 2 THEN 'At least 2 but less than 4 years'
+        WHEN h.ICLEVEL = 3 THEN 'Less than 2 years'
+    END AS Institution_Level,
+
+    COUNT(*) AS Institution_Count,
+
+    ROUND(AVG(CAST(g.GRRTTOT AS FLOAT)), 1) AS Avg_Graduation_Rate,
+    ROUND(AVG(CAST(g.TRRTTOT AS FLOAT)), 1) AS Avg_TransferOut_Rate
+
+FROM dbo.HD2024 h
+INNER JOIN dbo.DRVGR2024 g
+    ON h.UNITID = g.UNITID
+
+WHERE h.CONTROL > 0
+    AND h.ICLEVEL > 0
+    AND g.GRRTTOT >= 0
+    AND g.TRRTTOT >= 0
+
+GROUP BY
+    h.CONTROL,
+    h.ICLEVEL
+
+ORDER BY
+    h.ICLEVEL,
+    h.CONTROL;
+
+
+
+__________________________________________________________________________________________________________
+
+******* 4) ENROLLMENT PATTERNS
+Question: How do enrollment patterns differ across institution types and institution sizes?
+
+SELECT
+    h.CONTROL,
+    h.INSTSIZE,
+    COUNT(*) AS Institution_Count,
+    ROUND(AVG(CAST(e.ENRTOT AS FLOAT)), 0) AS Avg_Total_Enrollment,
+    ROUND(AVG(CAST(e.ENRFT AS FLOAT)), 0) AS Avg_FullTime_Enrollment,
+    ROUND(AVG(CAST(e.ENRPT AS FLOAT)), 0) AS Avg_PartTime_Enrollment
+FROM dbo.HD2024 h
+INNER JOIN dbo.DRVEF2024 e
+    ON h.UNITID = e.UNITID
+WHERE h.CONTROL > 0
+    AND h.INSTSIZE > 0
+    AND e.ENRTOT >= 0
+    AND e.ENRFT >= 0
+    AND e.ENRPT >= 0
+GROUP BY
+    h.CONTROL,
+    h.INSTSIZE
+ORDER BY
+    h.CONTROL,
+    h.INSTSIZE;
+
+
+
+
+
