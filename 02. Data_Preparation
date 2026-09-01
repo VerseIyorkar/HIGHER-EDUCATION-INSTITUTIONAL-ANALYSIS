@@ -1,0 +1,20 @@
+CREATE VIEW dbo.vw_IPEDS_Analysis AS
+SELECT
+    h.UNITID,
+    h.INSTNM,
+    h.STABBR,
+    h.CONTROL,
+    h.ICLEVEL,
+    h.INSTSIZE,
+    e.ENRTOT,
+    e.ENRFT,
+    e.ENRPT,
+    f.UPGRNTP,
+    f.UAGRNTP,
+    f.UFLOANP,
+    g.GRRTTOT,
+    g.TRRTTOT
+FROM dbo.HD2024 h
+LEFT JOIN dbo.DRVEF2024 e ON h.UNITID = e.UNITID
+LEFT JOIN dbo.SFA2324 f ON h.UNITID = f.UNITID
+LEFT JOIN dbo.DRVGR2024 g ON h.UNITID = g.UNITID;
