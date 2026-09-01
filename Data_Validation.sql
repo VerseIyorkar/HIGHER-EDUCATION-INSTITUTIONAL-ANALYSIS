@@ -1,0 +1,9 @@
+SELECT
+    COUNT(DISTINCT h.UNITID) AS Directory_Institutions,
+    COUNT(DISTINCT e.UNITID) AS Enrollment_Institutions,
+    COUNT(DISTINCT f.UNITID) AS FinancialAid_Institutions,
+    COUNT(DISTINCT g.UNITID) AS Graduation_Institutions
+FROM dbo.HD2024 h
+LEFT JOIN dbo.DRVEF2024 e ON h.UNITID = e.UNITID
+LEFT JOIN dbo.SFA2324 f ON h.UNITID = f.UNITID
+LEFT JOIN dbo.DRVGR2024 g ON h.UNITID = g.UNITID;
